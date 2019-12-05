@@ -20,13 +20,12 @@ io.on('connection', (socket) => {
         }
     });
     socket.on('return_game', () => {
-        io.sockets.emit('reload');
+        socket.emit('restartSnake');
+        socket.emit('restartScore');
+        socket.broadcast.to(roomName).emit('restartEnemyScore');
     })
     socket.on('addScore', (score) => {
         socket.broadcast.to(roomName).emit('setEnemyScore', score);
-    });
-    socket.on('newUser', () => {
-        socket.broadcast.to(roomName).emit('newSnake');
     });
     socket.on('snakeMove', (request) => {
         socket.broadcast.to(roomName).emit('newCoordinate', request);
@@ -34,8 +33,8 @@ io.on('connection', (socket) => {
     socket.on('genricBall', () => {
         if (!conectedCount) {
             coordinate = {
-                x: (Math.round(Math.random() * (59) + 0))*10,
-                y: (Math.round(Math.random() * (59) + 0))*10
+                x: (Math.round(Math.random() * (59) + 0)) * 10,
+                y: (Math.round(Math.random() * (59) + 0)) * 10
             }
         }
         conectedCount++;
@@ -43,8 +42,8 @@ io.on('connection', (socket) => {
     })
     socket.on('changeBallCoordinate', () => {
         coordinate = {
-            x: (Math.round(Math.random() * (59) + 0))*10,
-            y: (Math.round(Math.random() * (59) + 0))*10
+            x: (Math.round(Math.random() * (59) + 0)) * 10,
+            y: (Math.round(Math.random() * (59) + 0)) * 10
         }
         io.sockets.to(roomName).emit('ballNew', coordinate);
     })

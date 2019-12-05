@@ -3,7 +3,6 @@ import { Block } from '../Block/block';
 import BlockComponent from '../Block/block';
 import { action, observable } from 'mobx';
 import { observer } from 'mobx-react';
-
 import { Game } from '../game';
 import socket from '../socket';
 interface Props {
@@ -13,15 +12,14 @@ export class Snake {
     @observable blocks: Block[] = [];
     interval: any;
     moveDirection: String = '';
-
     constructor() {
-        socket.emit('newUser');
         this.blocks.push(new Block('head', { x: 10, y: 0 }), new Block('body', { x: 0, y: 0 }));
         this.startMove('ArrowRight');
-        socket.on('nullBlocks', () => {
-            this.blocks = [];
-            this.blocks.push(new Block('head', { x: 10, y: 0 }), new Block('body', { x: 0, y: 0 }));
-        })
+    }
+    Restart() {
+        this.blocks = [];
+        this.blocks.push(new Block('head', { x: 10, y: 0 }), new Block('body', { x: 0, y: 0 }));
+        this.startMove('ArrowRight');
     }
     @action addBlocks() {
         var lastblock = this.blocks[this.blocks.length - 1].coordinate;
@@ -76,7 +74,9 @@ export default class SnakeComponent extends React.Component<Props, {}> {
         document.addEventListener("keydown", (event) => {
             this.snake.startMove(event.key);
         });
-
+        socket.on('restartSnake', () => {
+            this.snake.Restart();
+        })
     }
     genericBlocks() {
         this.blocks = this.snake.blocks.map((item, index) => {
@@ -84,12 +84,9 @@ export default class SnakeComponent extends React.Component<Props, {}> {
                 <BlockComponent key={index} block={item} game={this.props.game} />
             )
         })
-
     }
     render() {
-
         this.genericBlocks();
-
         return (
             this.blocks
         )

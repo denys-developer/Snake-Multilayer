@@ -7,7 +7,7 @@ interface Props {
     game: Game;
 }
 export class Score {
-    @observable yourScore:number = 0;
+    @observable yourScore: number = 0;
     @observable enemyScore: Number = 0;
     constructor() {
         socket.on('setEnemyScore', (score: Number) => {
@@ -22,14 +22,29 @@ export class Score {
         this.yourScore++;
         socket.emit('addScore', this.yourScore);
     }
+   @action RestartYourScore(){
+        this.yourScore = 0;
+    }
+    @action RestartEnemyScore(){
+        this.enemyScore = 0;
+    }
 }
 @observer
 export class ScoreComponent extends React.Component<Props> {
     yourScore: Number | undefined;
-    enemyScore:Number | undefined
+    enemyScore: Number | undefined;
+
     constructor(props: Props) {
         super(props);
-
+        
+    }
+    componentWillMount() {
+        socket.on('restartScore',()=>{
+            this.props.game.score.RestartYourScore();
+        })
+        socket.on('restartEnemyScore',()=>{
+            this.props.game.score.RestartEnemyScore(); 
+        })
     }
     render() {
         this.yourScore = this.props.game.score.yourScore;
@@ -39,7 +54,6 @@ export class ScoreComponent extends React.Component<Props> {
                 <div>Your score {this.yourScore} </div>
                 <div>Enemy score {this.enemyScore} </div>
             </div>
-
         )
     }
 }

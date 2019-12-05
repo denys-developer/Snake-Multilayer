@@ -3,7 +3,6 @@ import { Game } from '../game';
 import { observable, action } from 'mobx';
 import { observer } from 'mobx-react';
 import { string } from 'prop-types';
-
 import socket from '../socket';
 interface Props {
     game: Game;
@@ -14,10 +13,7 @@ export class Ball {
         x: 0,
         y: 0
     }
-
     constructor() {
-
-
     }
     @action genericBall() {
         socket.emit('genricBall');
@@ -30,12 +26,10 @@ export class Ball {
         socket.on('ballNew', (coordinate: { x: Number, y: Number }) => {
             this.coordinate = coordinate;
         });
-
     }
 }
 @observer
 export default class BallComponent extends React.Component<Props>{
-
     constructor(props: Props) {
         super(props);
     }

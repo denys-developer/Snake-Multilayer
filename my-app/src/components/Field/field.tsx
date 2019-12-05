@@ -18,11 +18,8 @@ export class Field extends React.Component {
         this.game = new Game();
     }
     componentDidMount() {
-     
-            this.anotherSnake = <AnotherSnake game={this.game} />
-    
+        this.anotherSnake = <AnotherSnake game={this.game} />
     }
-
     render() {
         return (
             <div>
