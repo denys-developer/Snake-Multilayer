@@ -9,7 +9,7 @@ interface Props {
 export class Score {
     @observable yourScore: number = 0;
     @observable enemyScore: Number = 0;
-    constructor() {
+    constructor(public game:Game) {
         socket.on('setEnemyScore', (score: Number) => {
             this.addEnemyScore(score);
         })

@@ -5,9 +5,14 @@ export class Game {
     score: Score;
     snake: Snake;
     ball: Ball;
+    anotherSnake: { x: number, y: number }[]
     constructor() {
-        this.snake = new Snake();
-        this.ball = new Ball();
-        this.score = new Score();
+        this.snake = new Snake(this);
+        this.ball = new Ball(this);
+        this.score = new Score(this);
+        this.anotherSnake = [];
+        setInterval(() => {
+            this.anotherSnake = [];
+        }, 500)
     }
 }

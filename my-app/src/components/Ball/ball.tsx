@@ -13,7 +13,7 @@ export class Ball {
         x: 0,
         y: 0
     }
-    constructor() {
+    constructor(public game:Game) {
     }
     @action genericBall() {
         socket.emit('genricBall');

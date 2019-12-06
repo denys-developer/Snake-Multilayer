@@ -41,13 +41,16 @@ export default class AnotherSnake extends React.Component<Props>{
                     blocks[i].coordinate.x = previos.x;
                     blocks[i].coordinate.y = previos.y;
                     previos = Object.assign({}, before);
+                    this.props.game.anotherSnake.push(blocks[i].coordinate);
                 }
+
             }
             this.blocksComponent = blocks.map((item, index) => {
                 return (
                     <rect key={index} x={item.coordinate.x} y={item.coordinate.y} width="10" height="10" fill='rgb(255, 0, 0)' />
                 )
             })
+
         }, 200);
     }
     componentDidMount() {

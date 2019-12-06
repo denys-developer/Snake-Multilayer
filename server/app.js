@@ -53,6 +53,7 @@ io.on('connection', (socket) => {
         }
         io.sockets.to(roomName).emit('ballNew', coordinate);
     })
+    
     socket.on('disconnect', function () {
         users--;
         socket.leave(roomName);

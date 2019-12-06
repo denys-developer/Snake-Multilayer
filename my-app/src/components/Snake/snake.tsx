@@ -13,7 +13,7 @@ export class Snake {
     interval: any;
     snakeId: Number | undefined;
     moveDirection: String = '';
-    constructor() {
+    constructor(public game: Game) {
         this.blocks.push(new Block('head', { x: 10, y: 0 }), new Block('body', { x: 0, y: 0 }));
         socket.on('newConnection', () => {
             socket.emit('snakeMove', { blocks: this.blocks, direction: this.moveDirection, id: this.snakeId });
@@ -22,6 +22,7 @@ export class Snake {
     Restart() {
         this.blocks = [];
         this.blocks.push(new Block('head', { x: 10, y: 0 }), new Block('body', { x: 0, y: 0 }));
+        this.game.score.RestartYourScore();
         this.startMove('ArrowRight');
     }
     @action addBlocks() {
@@ -33,7 +34,7 @@ export class Snake {
         this.snakeId = id;
     }
     startMove(key: String) {
-        console.log(this.snakeId);
+
         socket.emit('snakeMove', { blocks: this.blocks, direction: key, id: this.snakeId });
         if (this.moveDirection == 'ArrowUp' && key == 'ArrowDown')
             return;
@@ -58,8 +59,15 @@ export class Snake {
                         this.blocks[i].coordinate.y -= 10;
                     if (key == 'ArrowLeft')
                         this.blocks[i].coordinate.x -= 10;
+                    var { x, y } = this.blocks[i].coordinate;
+                    this.game.anotherSnake.forEach((item) => {
+                        if ((x >= item.x && x <= item.x) && (y >= item.y && y <= item.y)) {
+                            this.Restart();
+                        }
+                    })
                 }
                 else {
+
                     before = Object.assign({}, this.blocks[i].coordinate);
                     this.blocks[i].coordinate.x = previos.x;
                     this.blocks[i].coordinate.y = previos.y;

@@ -14,5 +14,6 @@ export class SnakeAction {
         if (coordinate.x < 0 || coordinate.x > 990 || coordinate.y < 0 || coordinate.y > 590) {
             socket.emit('return_game');
         }
+        
     }
 }
