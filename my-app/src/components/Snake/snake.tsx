@@ -13,21 +13,24 @@ export class Snake {
     interval: any;
     snakeId: Number | undefined;
     moveDirection: String = '';
+    step: number;
+    color_green:string = 'rgb(118, 249, 0)';
     constructor(public game: Game) {
-        this.blocks.push(new Block('head', { x: 10, y: 0 }), new Block('body', { x: 0, y: 0 }));
+        this.blocks.push(new Block('head', { x: 10, y: 0 },this.color_green), new Block('body', { x: 0, y: 0 },this.color_green));
         socket.on('newConnection', () => {
             socket.emit('snakeMove', { blocks: this.blocks, direction: this.moveDirection, id: this.snakeId });
         })
+        this.step = 10;
     }
     Restart() {
         this.blocks = [];
-        this.blocks.push(new Block('head', { x: 10, y: 0 }), new Block('body', { x: 0, y: 0 }));
+        this.blocks.push(new Block('head', { x: 10, y: 0 },this.color_green), new Block('body', { x: 0, y: 0 },this.color_green));
         this.game.score.RestartYourScore();
         this.startMove('ArrowRight');
     }
-    @action addBlocks() {
+    @action addBlocks(color: string) {
         var lastblock = this.blocks[this.blocks.length - 1].coordinate;
-        this.blocks.push(new Block('body', { x: lastblock.x + 10, y: lastblock.y }));
+        this.blocks.push(new Block('body', { x: lastblock.x + 10, y: lastblock.y },color));
         socket.emit('snakeMove', { blocks: this.blocks, direction: this.moveDirection, id: this.snakeId });
     }
     setSnakeId(id: Number) {
@@ -52,13 +55,13 @@ export class Snake {
             for (var i = 0; i < this.blocks.length; i++) {
                 if (this.blocks[i].type == 'head') {
                     if (key == 'ArrowRight')
-                        this.blocks[i].coordinate.x += 10;
+                        this.blocks[i].coordinate.x += this.step;
                     if (key == 'ArrowDown')
-                        this.blocks[i].coordinate.y += 10;
+                        this.blocks[i].coordinate.y += this.step;
                     if (key == 'ArrowUp')
-                        this.blocks[i].coordinate.y -= 10;
+                        this.blocks[i].coordinate.y -= this.step;
                     if (key == 'ArrowLeft')
-                        this.blocks[i].coordinate.x -= 10;
+                        this.blocks[i].coordinate.x -= this.step;
                     var { x, y } = this.blocks[i].coordinate;
                     this.game.anotherSnake.forEach((item) => {
                         if ((x >= item.x && x <= item.x) && (y >= item.y && y <= item.y)) {
@@ -87,9 +90,7 @@ export default class SnakeComponent extends React.Component<Props, {}> {
         this.snake.startMove('ArrowRight');
 
     }
-
     componentWillMount() {
-
         document.addEventListener("keydown", (event) => {
             this.snake.startMove(event.key);
         });

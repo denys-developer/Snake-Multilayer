@@ -10,6 +10,12 @@ let io = require('socket.io')(server);
 var roomName = 'SnakeGame';
 var users = 0;
 var ident = [];
+var colors = [
+    'rgb(244, 86, 244)',
+    'rgb(244, 250, 49)',
+    'rgb(251, 115, 201)',
+    'rgb(154, 59, 97)'
+];
 io.on('connection', (socket) => {
     socket.emit('statec-connection', 'You connected');
     socket.join(roomName);
@@ -37,6 +43,8 @@ io.on('connection', (socket) => {
         socket.broadcast.to(roomName).emit('newCoordinate', request);
     })
     socket.on('genricBall', () => {
+       var color = colors[Math.floor(Math.random() * (colors.length - 0)) + 0]; 
+       console.log(color);
         if (!conectedCount) {
             coordinate = {
                 x: (Math.round(Math.random() * (59) + 0)) * 10,
@@ -44,14 +52,15 @@ io.on('connection', (socket) => {
             }
         }
         conectedCount++;
-        io.sockets.to(roomName).emit('ball', coordinate);
+        io.sockets.to(roomName).emit('ball', {coordinate:coordinate,color:color});
     })
     socket.on('changeBallCoordinate', () => {
+        var color = colors[Math.floor(Math.random() * (colors.length - 0)) + 0]; 
         coordinate = {
             x: (Math.round(Math.random() * (59) + 0)) * 10,
             y: (Math.round(Math.random() * (59) + 0)) * 10
         }
-        io.sockets.to(roomName).emit('ballNew', coordinate);
+        io.sockets.to(roomName).emit('ballNew',  {coordinate:coordinate,color:color});
     })
     
     socket.on('disconnect', function () {

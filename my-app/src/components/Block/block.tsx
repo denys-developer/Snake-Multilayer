@@ -12,7 +12,7 @@ export class Block {
         x: 0,
         y: 0
     }
-    constructor(public type: String, coordinate: { x: number, y: number }) {
+    constructor(public type: string, coordinate: { x: number, y: number },public color:string ) {
         this.coordinate = coordinate;
     }
 }
@@ -22,11 +22,13 @@ export default class BlockComponent extends React.Component<Props>{
     block: Block;
     coordinate: { x: number, y: number };
     action: SnakeAction | undefined;
+    color:string;
     constructor(props: Props) {
         super(props);
         this.coordinate = this.props.block.coordinate;
         this.game = this.props.game;
         this.block = this.props.block;
+        this.color = this.block.color;
         if (this.block.type == 'head') {
             this.action = new SnakeAction(this.game);
         }
@@ -37,7 +39,7 @@ export default class BlockComponent extends React.Component<Props>{
         }
         let { x, y } = this.coordinate;
         return (
-            <rect x={x} y={y} width="10" height="10" fill='rgb(118, 249, 0)' />
+            <rect x={x} y={y} width="10" height="10" fill={this.color} />
         )
     }
 }

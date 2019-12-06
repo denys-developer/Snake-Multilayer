@@ -9,23 +9,22 @@ interface Props {
 export class Score {
     @observable yourScore: number = 0;
     @observable enemyScore: Number = 0;
-    constructor(public game:Game) {
+    constructor(public game: Game) {
         socket.on('setEnemyScore', (score: Number) => {
             this.addEnemyScore(score);
         })
     }
     @action addEnemyScore(score: Number) {
-        console.log(score);
         this.enemyScore = score;
     }
     @action addScore() {
         this.yourScore++;
         socket.emit('addScore', this.yourScore);
     }
-   @action RestartYourScore(){
+    @action RestartYourScore() {
         this.yourScore = 0;
     }
-    @action RestartEnemyScore(){
+    @action RestartEnemyScore() {
         this.enemyScore = 0;
     }
 }
@@ -36,14 +35,14 @@ export class ScoreComponent extends React.Component<Props> {
 
     constructor(props: Props) {
         super(props);
-        
+
     }
     componentWillMount() {
-        socket.on('restartScore',()=>{
+        socket.on('restartScore', () => {
             this.props.game.score.RestartYourScore();
         })
-        socket.on('restartEnemyScore',()=>{
-            this.props.game.score.RestartEnemyScore(); 
+        socket.on('restartEnemyScore', () => {
+            this.props.game.score.RestartEnemyScore();
         })
     }
     render() {

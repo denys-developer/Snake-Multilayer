@@ -15,9 +15,11 @@ export default class AnotherSnake extends React.Component<Props>{
     @observable blocksComponent: JSX.Element[] | undefined;
     interval: any;
     id: Number;
+    step:number;
     constructor(props: Props) {
         super(props);
         this.id = this.props.id;
+        this.step = 10;
     }
     @action startMove(request: { blocks: Block[], direction: String, id: Number }) {
         clearInterval(this.interval);
@@ -25,16 +27,16 @@ export default class AnotherSnake extends React.Component<Props>{
         this.interval = setInterval(() => {
             var previos = Object.assign({}, blocks[0].coordinate);
             var before;
-            for (var i = 0; i < blocks.length; i++) {
+            for (var i = 0; i < blocks.length; i++) {  
                 if (blocks[i].type == 'head') {
                     if (direction == 'ArrowRight')
-                        blocks[i].coordinate.x += 10;
+                        blocks[i].coordinate.x += this.step;
                     if (direction == 'ArrowDown')
-                        blocks[i].coordinate.y += 10;
+                        blocks[i].coordinate.y += this.step;
                     if (direction == 'ArrowUp')
-                        blocks[i].coordinate.y -= 10;
+                        blocks[i].coordinate.y -= this.step;
                     if (direction == 'ArrowLeft')
-                        blocks[i].coordinate.x -= 10;
+                        blocks[i].coordinate.x -= this.step;
                 }
                 else {
                     before = Object.assign({}, blocks[i].coordinate);
