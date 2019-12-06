@@ -11,10 +11,13 @@ interface Props {
 export class Snake {
     @observable blocks: Block[] = [];
     interval: any;
+    snakeId: Number | undefined;
     moveDirection: String = '';
     constructor() {
         this.blocks.push(new Block('head', { x: 10, y: 0 }), new Block('body', { x: 0, y: 0 }));
-        this.startMove('ArrowRight');
+        socket.on('newConnection', () => {
+            socket.emit('snakeMove', { blocks: this.blocks, direction: this.moveDirection, id: this.snakeId });
+        })
     }
     Restart() {
         this.blocks = [];
@@ -24,10 +27,14 @@ export class Snake {
     @action addBlocks() {
         var lastblock = this.blocks[this.blocks.length - 1].coordinate;
         this.blocks.push(new Block('body', { x: lastblock.x + 10, y: lastblock.y }));
-        socket.emit('snakeMove', { blocks: this.blocks, direction: this.moveDirection });
+        socket.emit('snakeMove', { blocks: this.blocks, direction: this.moveDirection, id: this.snakeId });
+    }
+    setSnakeId(id: Number) {
+        this.snakeId = id;
     }
     startMove(key: String) {
-        socket.emit('snakeMove', { blocks: this.blocks, direction: key });
+        console.log(this.snakeId);
+        socket.emit('snakeMove', { blocks: this.blocks, direction: key, id: this.snakeId });
         if (this.moveDirection == 'ArrowUp' && key == 'ArrowDown')
             return;
         if (this.moveDirection == 'ArrowDown' && key == 'ArrowUp')
@@ -69,8 +76,12 @@ export default class SnakeComponent extends React.Component<Props, {}> {
     constructor(props: Props) {
         super(props);
         this.snake = this.props.game.snake;
+        this.snake.startMove('ArrowRight');
+
     }
+
     componentWillMount() {
+
         document.addEventListener("keydown", (event) => {
             this.snake.startMove(event.key);
         });

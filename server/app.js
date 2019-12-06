@@ -9,14 +9,20 @@ var BallCoordinate
 let io = require('socket.io')(server);
 var roomName = 'SnakeGame';
 var users = 0;
+var ident = [];
 io.on('connection', (socket) => {
     socket.emit('statec-connection', 'You connected');
     socket.join(roomName);
-    socket.on('join-game', () => {
+    socket.on('join-game', (id) => {
         users++;
         console.log(users);
+        ident.push(id);
+        socket.emit('setId', id);
         if (users >= 2) {
+            var usercount = users;
             io.sockets.emit('start_game');
+            io.sockets.emit('add_players', ident);
+            io.sockets.emit('newConnection');
         }
     });
     socket.on('return_game', () => {

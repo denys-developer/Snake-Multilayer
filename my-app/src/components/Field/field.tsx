@@ -7,18 +7,32 @@ import { Game } from '../game';
 import { ScoreComponent } from '../Score/score';
 import { observable, action } from 'mobx';
 import { observer } from 'mobx-react';
-import { Block } from '../Block/block';
 import socket from '../socket';
+import { number } from 'prop-types';
+interface Props {
+    id: Number;
+}
 @observer
-export class Field extends React.Component {
+export class Field extends React.Component<Props>{
     game: Game;
-    @observable anotherSnake: JSX.Element | undefined;
-    constructor(props: Readonly<{}>) {
+    @observable anotherSnake: JSX.Element[] = [];
+    users: Number[] = [];
+    constructor(props: Props) {
         super(props);
         this.game = new Game();
+        socket.on('add_players', (ident: Number[]) => {
+            var newArray = ident.filter((item, index) => {
+                return this.game.snake.snakeId != item
+            })
+            this.anotherSnake = newArray.map((item, index) => {
+                return (
+                    <AnotherSnake game={this.game} id={item} />
+                )
+            })
+        })
     }
-    componentDidMount() {
-        this.anotherSnake = <AnotherSnake game={this.game} />
+    componentWillMount() {
+        this.game.snake.setSnakeId(this.props.id);
     }
     render() {
         return (

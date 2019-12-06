@@ -7,16 +7,19 @@ import { observer } from 'mobx-react';
 import { observable, action } from 'mobx';
 import socket from '../socket';
 interface Props {
-    game: Game
+    game: Game;
+    id: Number;
 }
 @observer
 export default class AnotherSnake extends React.Component<Props>{
     @observable blocksComponent: JSX.Element[] | undefined;
     interval: any;
+    id: Number;
     constructor(props: Props) {
         super(props);
+        this.id = this.props.id;
     }
-    @action startMove(request: { blocks: Block[], direction: String }) {
+    @action startMove(request: { blocks: Block[], direction: String, id: Number }) {
         clearInterval(this.interval);
         var { blocks, direction } = request;
         this.interval = setInterval(() => {
@@ -48,8 +51,11 @@ export default class AnotherSnake extends React.Component<Props>{
         }, 200);
     }
     componentDidMount() {
-        socket.on('newCoordinate', (request: { blocks: Block[], direction: String }) => {
-            this.startMove(request);
+        socket.on('newCoordinate', (request: { blocks: Block[], direction: String, id: Number }) => {
+            if (this.id == request.id) {
+                this.startMove(request);
+            }
+
         })
     }
     render() {
