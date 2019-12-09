@@ -28,8 +28,7 @@ export class SnakeAction {
             this.game.score.addScore();
             this.game.snake.addBlocks(color);
         }
-        console.log(this.fieldSize);
-        console.log(this.snakeSize);
+    
         if (coordinate.x < 0 || coordinate.x > this.fieldSize - 10 || coordinate.y < 0 || coordinate.y > this.fieldSize - 10) {
             socket.emit('return_game');
         }

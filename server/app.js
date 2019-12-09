@@ -40,7 +40,7 @@ io.on('connection', (socket) => {
         }
     });
     socket.on('return_game', () => {
-  
+
         socket.emit('restartSnake');
         socket.emit('setFiledSize', fieldSize);
         socket.emit('setSnakeSize', snakeSize);
@@ -52,16 +52,21 @@ io.on('connection', (socket) => {
     });
     socket.on('snakeMove', (request) => {
         io.sockets.emit('setSnakeSize', snakeSize);
-
         socket.broadcast.to(roomName).emit('newCoordinate', request);
     })
+
     socket.on('genricBall', () => {
         var color = colors[Math.floor(Math.random() * (colors.length - 0)) + 0];
         console.log(color);
+
         if (!conectedCount) {
+
+            var rand = (min, max, num) => {
+                return Math.floor(Math.floor(Math.random() * (max - min + 1) + min) / num) * num;
+            }
             coordinate = {
-                x: (Math.round(Math.random() * (fieldSize/10) + 0)) * 10,
-                y: (Math.round(Math.random() * fieldSize/10 + 0)) * 10
+                x: rand(fieldSize, 1, 20),
+                y: rand(fieldSize, 1, 20)
             }
         }
         conectedCount++;
@@ -69,14 +74,17 @@ io.on('connection', (socket) => {
     })
     socket.on('changeBallCoordinate', () => {
         var color = colors[Math.floor(Math.random() * (colors.length - 0)) + 0];
-        console.log(color);
 
+        var rand = (min, max, num) => {
+            return Math.floor(Math.floor(Math.random() * (max - min + 1) + min) / num) * num;
+        }
         coordinate = {
-            x: (Math.round(Math.random() * (fieldSize/snakeSize) + 0)) * 10,
-            y: (Math.round(Math.random() * (fieldSize/snakeSize) + 0)) * 10
+            x: rand(fieldSize, 1, 20),
+            y: rand(fieldSize, 1, 20)
         }
         io.sockets.to(roomName).emit('ballNew', { coordinate: coordinate, color: color });
     })
+
     socket.on('set_size', (size) => {
 
         snakeSize = size.snake;

@@ -17,7 +17,7 @@ socket.emit('set_size',{snake:this.snake,field:this.field});
     }
     selectFieldSize = (event: any)=> {
         this.field = parseInt(event.target.value);
-        console.log(this.field);
+
     }
     render() {
         return (
