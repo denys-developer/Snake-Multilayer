@@ -3,6 +3,7 @@ import { observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { SnakeAction } from '../Snake/snakeAction';
 import { Game } from '../game';
+import socket from '../socket';
 interface Props {
     block: Block;
     game: Game;
@@ -12,8 +13,12 @@ export class Block {
         x: 0,
         y: 0
     }
+    size:number|undefined;
     constructor(public type: string, coordinate: { x: number, y: number },public color:string ) {
         this.coordinate = coordinate;
+        socket.on('setSnakeSize', (size: number) => {
+            this.size = size;
+        })
     }
 }
 @observer
@@ -39,7 +44,7 @@ export default class BlockComponent extends React.Component<Props>{
         }
         let { x, y } = this.coordinate;
         return (
-            <rect x={x} y={y} width="10" height="10" fill={this.color} />
+            <rect x={x} y={y} width={this.block.size} height={this.block.size} fill={this.color} />
         )
     }
 }

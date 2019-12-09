@@ -1,20 +1,38 @@
 import { Snake } from "./snake";
 import { Game } from "../game";
 import socket from "../socket";
+import { number } from "prop-types";
+import { kMaxLength } from "buffer";
 export class SnakeAction {
+    fieldSize: number;
+    snakeSize: number;
+
     constructor(public game: Game) {
+        this.fieldSize = 200;
+        this.snakeSize = 10;
+        socket.on('setFiledSize', (size: number) => {
+
+            this.fieldSize = size;
+
+  
+        })
+        socket.on('setSnakeSize', (size: number) => {
+            this.snakeSize = size;
+        })
     }
     eatBall(coordinate: { x: number, y: number }) {
         let ballCoordinate = this.game.ball.coordinate;
         var color = this.game.ball.color;
-        if ((coordinate.x >= ballCoordinate.x && coordinate.x <= ballCoordinate.x) && (coordinate.y >= ballCoordinate.y && coordinate.y <= ballCoordinate.y)) {
+        if ((coordinate.x >= ballCoordinate.x && coordinate.x <= (ballCoordinate.x + this.snakeSize)) && (coordinate.y >= ballCoordinate.y && coordinate.y <= (ballCoordinate.y+this.snakeSize))) {
             this.game.ball.changeBallCoordinate();
             this.game.score.addScore();
             this.game.snake.addBlocks(color);
         }
-        if (coordinate.x < 0 || coordinate.x > 990 || coordinate.y < 0 || coordinate.y > 590) {
+        console.log(this.fieldSize);
+        console.log(this.snakeSize);
+        if (coordinate.x < 0 || coordinate.x > this.fieldSize - 10 || coordinate.y < 0 || coordinate.y > this.fieldSize - 10) {
             socket.emit('return_game');
         }
-        
+
     }
 }

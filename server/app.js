@@ -16,6 +16,8 @@ var colors = [
     'rgb(251, 115, 201)',
     'rgb(154, 59, 97)'
 ];
+var snakeSize = 10;
+var fieldSize = 100;
 io.on('connection', (socket) => {
     socket.emit('statec-connection', 'You connected');
     socket.join(roomName);
@@ -24,15 +26,24 @@ io.on('connection', (socket) => {
         console.log(users);
         ident.push(id);
         socket.emit('setId', id);
+        if (users == 1) {
+            socket.emit('select_size')
+        }
         if (users >= 2) {
             var usercount = users;
             io.sockets.emit('start_game');
+            io.sockets.emit('setFiledSize', fieldSize);
             io.sockets.emit('add_players', ident);
+            io.sockets.emit('setSnakeSize', snakeSize);
+            io.sockets.emit('setBallSize', snakeSize);
             io.sockets.emit('newConnection');
         }
     });
     socket.on('return_game', () => {
+  
         socket.emit('restartSnake');
+        socket.emit('setFiledSize', fieldSize);
+        socket.emit('setSnakeSize', snakeSize);
         socket.emit('restartScore');
         socket.broadcast.to(roomName).emit('restartEnemyScore');
     })
@@ -40,29 +51,39 @@ io.on('connection', (socket) => {
         socket.broadcast.to(roomName).emit('setEnemyScore', score);
     });
     socket.on('snakeMove', (request) => {
+        io.sockets.emit('setSnakeSize', snakeSize);
+
         socket.broadcast.to(roomName).emit('newCoordinate', request);
     })
     socket.on('genricBall', () => {
-       var color = colors[Math.floor(Math.random() * (colors.length - 0)) + 0]; 
-       console.log(color);
+        var color = colors[Math.floor(Math.random() * (colors.length - 0)) + 0];
+        console.log(color);
         if (!conectedCount) {
             coordinate = {
-                x: (Math.round(Math.random() * (59) + 0)) * 10,
-                y: (Math.round(Math.random() * (59) + 0)) * 10
+                x: (Math.round(Math.random() * (fieldSize/10) + 0)) * 10,
+                y: (Math.round(Math.random() * fieldSize/10 + 0)) * 10
             }
         }
         conectedCount++;
-        io.sockets.to(roomName).emit('ball', {coordinate:coordinate,color:color});
+        io.sockets.to(roomName).emit('ball', { coordinate: coordinate, color: color });
     })
     socket.on('changeBallCoordinate', () => {
-        var color = colors[Math.floor(Math.random() * (colors.length - 0)) + 0]; 
+        var color = colors[Math.floor(Math.random() * (colors.length - 0)) + 0];
+        console.log(color);
+
         coordinate = {
-            x: (Math.round(Math.random() * (59) + 0)) * 10,
-            y: (Math.round(Math.random() * (59) + 0)) * 10
+            x: (Math.round(Math.random() * (fieldSize/snakeSize) + 0)) * 10,
+            y: (Math.round(Math.random() * (fieldSize/snakeSize) + 0)) * 10
         }
-        io.sockets.to(roomName).emit('ballNew',  {coordinate:coordinate,color:color});
+        io.sockets.to(roomName).emit('ballNew', { coordinate: coordinate, color: color });
     })
-    
+    socket.on('set_size', (size) => {
+
+        snakeSize = size.snake;
+        fieldSize = size.field;
+
+        io.sockets.to(roomName).emit('wait_other_players');
+    })
     socket.on('disconnect', function () {
         users--;
         socket.leave(roomName);

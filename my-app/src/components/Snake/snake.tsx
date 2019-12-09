@@ -13,24 +13,28 @@ export class Snake {
     interval: any;
     snakeId: Number | undefined;
     moveDirection: String = '';
-    step: number;
-    color_green:string = 'rgb(118, 249, 0)';
+    step: number = 10;
+    color_green: string = 'rgb(118, 249, 0)';
     constructor(public game: Game) {
-        this.blocks.push(new Block('head', { x: 10, y: 0 },this.color_green), new Block('body', { x: 0, y: 0 },this.color_green));
+        this.blocks.push(new Block('head', { x: 10, y: 0 }, this.color_green), new Block('body', { x: 0, y: 0 }, this.color_green));
         socket.on('newConnection', () => {
             socket.emit('snakeMove', { blocks: this.blocks, direction: this.moveDirection, id: this.snakeId });
+        });
+        socket.on('setSnakeSize', (size: number) => {
+            this.step = size;
         })
-        this.step = 10;
+
     }
     Restart() {
         this.blocks = [];
-        this.blocks.push(new Block('head', { x: 10, y: 0 },this.color_green), new Block('body', { x: 0, y: 0 },this.color_green));
+        this.blocks.push(new Block('head', { x: 10, y: 0 }, this.color_green), new Block('body', { x: 0, y: 0 }, this.color_green));
         this.game.score.RestartYourScore();
         this.startMove('ArrowRight');
     }
     @action addBlocks(color: string) {
         var lastblock = this.blocks[this.blocks.length - 1].coordinate;
-        this.blocks.push(new Block('body', { x: lastblock.x + 10, y: lastblock.y },color));
+        this.blocks.push(new Block('body', { x: lastblock.x + 10, y: lastblock.y }, color));
+        console.log(this.blocks.length);
         socket.emit('snakeMove', { blocks: this.blocks, direction: this.moveDirection, id: this.snakeId });
     }
     setSnakeId(id: Number) {
@@ -95,6 +99,7 @@ export default class SnakeComponent extends React.Component<Props, {}> {
             this.snake.startMove(event.key);
         });
         socket.on('restartSnake', () => {
+
             this.snake.Restart();
         })
     }

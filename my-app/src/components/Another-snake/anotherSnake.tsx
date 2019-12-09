@@ -16,10 +16,15 @@ export default class AnotherSnake extends React.Component<Props>{
     interval: any;
     id: Number;
     step:number;
+    size:number|undefined;
     constructor(props: Props) {
         super(props);
         this.id = this.props.id;
         this.step = 10;
+        socket.on('setSnakeSize', (size: number) => {
+            this.size = size;
+            this.step = size
+        })
     }
     @action startMove(request: { blocks: Block[], direction: String, id: Number }) {
         clearInterval(this.interval);
@@ -49,7 +54,7 @@ export default class AnotherSnake extends React.Component<Props>{
             }
             this.blocksComponent = blocks.map((item, index) => {
                 return (
-                    <rect key={index} x={item.coordinate.x} y={item.coordinate.y} width="10" height="10" fill='rgb(255, 0, 0)' />
+                    <rect key={index} x={item.coordinate.x} y={item.coordinate.y} width={this.size}  height= {this.size} fill='rgb(255, 0, 0)' />
                 )
             })
 

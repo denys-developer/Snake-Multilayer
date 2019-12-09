@@ -17,6 +17,7 @@ export class Field extends React.Component<Props>{
     game: Game;
     @observable anotherSnake: JSX.Element[] = [];
     users: Number[] = [];
+    size: number | undefined;
     constructor(props: Props) {
         super(props);
         this.game = new Game();
@@ -30,15 +31,20 @@ export class Field extends React.Component<Props>{
                 )
             })
         })
+        socket.on('setFiledSize', (size: number) => {
+            this.size = size;
+        })
     }
     componentWillMount() {
         this.game.snake.setSnakeId(this.props.id);
     }
     render() {
+        var width = this.size + 'px';
+        var height = this.size + 'px';
         return (
             <div>
                 <ScoreComponent game={this.game} />
-                <svg id="field">
+                <svg width={width} height={height} className="field">
                     <SnakeComponent game={this.game} />
                     <BallComponent game={this.game} />
                     {this.anotherSnake}
