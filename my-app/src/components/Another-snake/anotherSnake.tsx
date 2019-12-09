@@ -22,6 +22,7 @@ export default class AnotherSnake extends React.Component<Props>{
         this.id = this.props.id;
         this.step = 10;
         socket.on('setSnakeSize', (size: number) => {
+            console.log(size);
             this.size = size;
             this.step = size
         })

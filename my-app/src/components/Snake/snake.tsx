@@ -27,6 +27,7 @@ export class Snake {
     }
     Restart() {
         this.blocks = [];
+        
         this.blocks.push(new Block('head', { x: this.step, y: 0 }, this.color_green), new Block('body', { x: 0, y: 0 }, this.color_green));
         this.game.score.RestartYourScore();
         this.startMove('ArrowRight');
@@ -67,7 +68,6 @@ export class Snake {
                     if (key == 'ArrowLeft')
                         this.blocks[i].coordinate.x -= this.step;
                     var { x, y } = this.blocks[i].coordinate;
-                    console.log(x, y);
                     this.game.anotherSnake.forEach((item) => {
                         if ((x >= item.x && x <= item.x) && (y >= item.y && y <= item.y)) {
                             this.Restart();
@@ -100,7 +100,6 @@ export default class SnakeComponent extends React.Component<Props, {}> {
             this.snake.startMove(event.key);
         });
         socket.on('restartSnake', () => {
-
             this.snake.Restart();
         })
     }

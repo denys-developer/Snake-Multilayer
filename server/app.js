@@ -3,11 +3,9 @@ let app = express();
 let server = app.listen(8080, () => {
     console.log('server work');
 });
-
 let conectedCount = 0;
 var BallCoordinate
 let io = require('socket.io')(server);
-
 var rooms = [];
 var users = 0;
 var ident = [];
@@ -22,14 +20,13 @@ var fieldSize = 100;
 io.on('connection', (socket) => {
     var roomName = '';
     socket.on('join-game', (id) => {
+        io.sockets.emit('add_room',rooms);
         socket.emit('statec-connection', 'You connected');
-        socket.emit('add_room',rooms);
         socket.on('room_connection',(room)=>{
             socket.emit('wait_other_players');
             roomName = room;
             socket.join(roomName);
             users++;
-    
             ident.push(id);
             socket.emit('setId', id);
             if (io.sockets.adapter.rooms[roomName].length == 1) {
@@ -48,12 +45,12 @@ io.on('connection', (socket) => {
    
     });
  
-
-    
     socket.on('return_game', () => {
-        socket.to(roomName).emit('restartSnake');
-        socket.to(roomName).emit('setFiledSize', fieldSize);
-        socket.to(roomName).emit('setSnakeSize', snakeSize);
+        socket.emit('restartSnake');
+        socket.emit('setFiledSize', fieldSize);
+        socket.emit('setSnakeSize', snakeSize);
+      
+      
         socket.to(roomName).emit('restartScore');
         socket.broadcast.to(roomName).emit('restartEnemyScore');
     })
@@ -71,6 +68,7 @@ io.on('connection', (socket) => {
             var rand = (min, max, num) => {
                 return Math.floor(Math.floor(Math.random() * (max - min + 1) + min) / num) * num;
             }
+            console.log(rand(fieldSize, 1, 20));
             coordinate = {
                 x: rand(fieldSize, 1, 20),
                 y: rand(fieldSize, 1, 20)
@@ -84,6 +82,7 @@ io.on('connection', (socket) => {
         var rand = (min, max, num) => {
             return Math.floor(Math.floor(Math.random() * (max - min + 1) + min) / num) * num;
         }
+        console.log(rand(fieldSize, 1, 20));
         coordinate = {
             x: rand(fieldSize, 1, 20),
             y: rand(fieldSize, 1, 20)
@@ -99,7 +98,7 @@ io.on('connection', (socket) => {
     socket.on('create_room', (room) => {
         rooms.push(room);
         console.log(rooms);
-        socket.emit('add_room',rooms);
+        io.sockets.emit('add_room',rooms);
     })
     socket.on('disconnect', function () {
         users--;

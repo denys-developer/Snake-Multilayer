@@ -2,6 +2,9 @@ import React from 'react';
 import { observable } from 'mobx';
 import socket from '../socket';
 import { observer } from 'mobx-react';
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemText from '@material-ui/core/ListItemText';
 
 
 @observer
@@ -11,21 +14,28 @@ export class RoomList extends React.Component {
     @observable roomsList: JSX.Element[] | undefined;
     constructor(props: Readonly<{}>) {
         super(props);
-        this.myRef = React.createRef();
-    }
-    connectToRoom = (room: String) => {
-       socket.emit('room_connection',room);
-    }
-    componentWillMount() {
         socket.on('add_room', (rooms: String[]) => {
-            console.log(rooms);
             this.roomsList = rooms.map((item, index) => {
                 return (
-                    <li ref={this.myRef} key={index} onClick={() => this.connectToRoom(item)}>{item}</li>
+                    <div > 
+                    <List key={index}>
+                        <li onClick={() => this.connectToRoom(item)}>
+                            <ListItem button>
+                                {item}
+                            </ListItem>
+                        </li>
+                    </List>
+                    </div>
                 )
             })
 
         })
+    }
+    connectToRoom = (room: String) => {
+        socket.emit('room_connection', room);
+    }
+    componentDidMount() {
+
     }
     render() {
         return (
