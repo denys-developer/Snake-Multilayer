@@ -67,7 +67,7 @@ export class Snake {
                     if (key == 'ArrowLeft')
                         this.blocks[i].coordinate.x -= this.step;
                     var { x, y } = this.blocks[i].coordinate;
-                    console.log(x,y);
+                    console.log(x, y);
                     this.game.anotherSnake.forEach((item) => {
                         if ((x >= item.x && x <= item.x) && (y >= item.y && y <= item.y)) {
                             this.Restart();

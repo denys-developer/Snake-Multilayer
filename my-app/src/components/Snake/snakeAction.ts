@@ -11,10 +11,7 @@ export class SnakeAction {
         this.fieldSize = 200;
         this.snakeSize = 10;
         socket.on('setFiledSize', (size: number) => {
-
-            this.fieldSize = size;
-
-  
+            this.fieldSize = size;  
         })
         socket.on('setSnakeSize', (size: number) => {
             this.snakeSize = size;
