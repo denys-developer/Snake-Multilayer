@@ -16,33 +16,33 @@ export class Snake {
     step: number = 10;
     color_green: string = 'rgb(118, 249, 0)';
     constructor(public game: Game) {
-        this.blocks.push(new Block('head', { x: this.step, y: 0 }, this.color_green), new Block('body', { x: 0, y: 0 }, this.color_green));
+          socket.on('setSnakeSize', (size: number) => {
+              console.log(size);
+            this.step = size;
+        })
+            
+        this.blocks.push(new Block('head', { x: 20, y: 0 }, this.color_green), new Block('body', { x: 0, y: 0 }, this.color_green));
+        console.log(this.blocks);
         socket.on('newConnection', () => {
             socket.emit('snakeMove', { blocks: this.blocks, direction: this.moveDirection, id: this.snakeId });
         });
-        socket.on('setSnakeSize', (size: number) => {
-            this.step = size;
-        })
-
+      
     }
     Restart() {
         this.blocks = [];
-        
-        this.blocks.push(new Block('head', { x: this.step, y: 0 }, this.color_green), new Block('body', { x: 0, y: 0 }, this.color_green));
+        this.blocks.push(new Block('head', { x: 20, y: 0 }, this.color_green), new Block('body', { x: 0, y: 0 }, this.color_green));
         this.game.score.RestartYourScore();
         this.startMove('ArrowRight');
     }
     @action addBlocks(color: string) {
         var lastblock = this.blocks[this.blocks.length - 1].coordinate;
         this.blocks.push(new Block('body', { x: lastblock.x + 10, y: lastblock.y }, color));
-
         socket.emit('snakeMove', { blocks: this.blocks, direction: this.moveDirection, id: this.snakeId });
     }
     setSnakeId(id: Number) {
         this.snakeId = id;
     }
     startMove(key: String) {
-
         socket.emit('snakeMove', { blocks: this.blocks, direction: key, id: this.snakeId });
         if (this.moveDirection == 'ArrowUp' && key == 'ArrowDown')
             return;
