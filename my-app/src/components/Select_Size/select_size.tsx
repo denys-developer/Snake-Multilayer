@@ -8,14 +8,14 @@ export class Select_Size extends React.Component {
     constructor(props: Readonly<{}>) {
         super(props);
     }
-    SaveSelect =()=> {
-socket.emit('set_size',{snake:this.snake,field:this.field});
+    SaveSelect = () => {
+        socket.emit('set_size', { snake: this.snake, field: this.field });
     }
-    selectSnakeSize=(event: any)=>{
+    selectSnakeSize = (event: any) => {
 
         this.snake = parseInt(event.target.value);
     }
-    selectFieldSize = (event: any)=> {
+    selectFieldSize = (event: any) => {
         this.field = parseInt(event.target.value);
     }
     render() {
@@ -23,14 +23,14 @@ socket.emit('set_size',{snake:this.snake,field:this.field});
             <div>
                 <h1>
                     Select snake size
-           <select className="select custom-select custom-select-lg mb-3"  onChange={this.selectSnakeSize}>
+           <select className="select custom-select custom-select-lg mb-3" onChange={this.selectSnakeSize}>
                         <option value="10">10</option>
                         <option value="20">20</option>
                     </select>
                 </h1>
                 <h1>
                     Select field size
-             <select className="select custom-select custom-select-lg mb-3"  onChange={this.selectFieldSize}>
+             <select className="select custom-select custom-select-lg mb-3" onChange={this.selectFieldSize}>
                         <option value="200"> 200</option>
                         <option value="400">400</option>
                         <option value="600">600</option>

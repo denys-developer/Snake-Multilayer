@@ -5,8 +5,10 @@ import { action, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { Game } from '../game';
 import socket from '../socket';
+
 interface Props {
     game: Game;
+    status: boolean;
 }
 export class Snake {
     @observable blocks: Block[] = [];
@@ -14,19 +16,19 @@ export class Snake {
     snakeId: Number | undefined;
     moveDirection: String = '';
     step: number = 10;
+    authStatus: boolean | undefined;
     color_green: string = 'rgb(118, 249, 0)';
     constructor(public game: Game) {
-          socket.on('setSnakeSize', (size: number) => {
-              console.log(size);
+
+
+        socket.on('setSnakeSize', (size: number) => {
+            console.log(size);
             this.step = size;
         })
-            
         this.blocks.push(new Block('head', { x: 20, y: 0 }, this.color_green), new Block('body', { x: 0, y: 0 }, this.color_green));
-        console.log(this.blocks);
         socket.on('newConnection', () => {
             socket.emit('snakeMove', { blocks: this.blocks, direction: this.moveDirection, id: this.snakeId });
         });
-      
     }
     Restart() {
         this.blocks = [];
@@ -75,7 +77,6 @@ export class Snake {
                     })
                 }
                 else {
-
                     before = Object.assign({}, this.blocks[i].coordinate);
                     this.blocks[i].coordinate.x = previos.x;
                     this.blocks[i].coordinate.y = previos.y;
@@ -106,7 +107,7 @@ export default class SnakeComponent extends React.Component<Props, {}> {
     genericBlocks() {
         this.blocks = this.snake.blocks.map((item, index) => {
             return (
-                <BlockComponent key={index} block={item} game={this.props.game} />
+                <BlockComponent key={index} block={item} game={this.props.game} status={this.props.status} />
             )
         })
     }

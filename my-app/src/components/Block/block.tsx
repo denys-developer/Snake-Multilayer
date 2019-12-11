@@ -7,14 +7,15 @@ import socket from '../socket';
 interface Props {
     block: Block;
     game: Game;
+    status:boolean;
 }
 export class Block {
     @observable coordinate = {
         x: 0,
         y: 0
     }
-    size:number|undefined;
-    constructor(public type: string, coordinate: { x: number, y: number },public color:string ) {
+    size: number | undefined;
+    constructor(public type: string, coordinate: { x: number, y: number }, public color: string) {
         this.coordinate = coordinate;
         socket.on('setSnakeSize', (size: number) => {
             this.size = size;
@@ -27,7 +28,7 @@ export default class BlockComponent extends React.Component<Props>{
     block: Block;
     coordinate: { x: number, y: number };
     action: SnakeAction | undefined;
-    color:string;
+    color: string;
     constructor(props: Props) {
         super(props);
         this.coordinate = this.props.block.coordinate;
@@ -40,7 +41,11 @@ export default class BlockComponent extends React.Component<Props>{
     }
     render() {
         if (this.action) {
-            this.action.eatBall(this.coordinate);
+            var date = {
+                coordinate:this.coordinate,
+                status:this.props.status
+            }
+            this.action.eatBall(date);
         }
         let { x, y } = this.coordinate;
         return (

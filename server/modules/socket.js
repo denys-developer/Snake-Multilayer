@@ -15,24 +15,30 @@ module.exports = function (io) {
     var fieldSize = 100;
 
     io.on('connection', (socket) => {
+        console.log(socket.id);
+        ident.push(socket.id);
+        socket.emit('auth');
         var roomName = '';
+        var status;
         io.sockets.emit('add_room', rooms);
         socket.on('join-game', (id) => {
-     
+
             socket.emit('statec-connection', 'You connected');
-            socket.on('room_connection', (room) => {
+            socket.on('room_connection', (data) => {
                 socket.emit('wait_other_players');
-                roomName = room;
+                roomName = data.room;
+                status = data.status;
                 socket.join(roomName);
                 users++;
-                ident.push(id);
-                socket.emit('setId', id);
+       
+                socket.emit('setId',socket.id);
                 if (io.sockets.adapter.rooms[roomName].length == 1) {
                     socket.emit('select_size')
                 }
                 if (io.sockets.adapter.rooms[roomName].length >= 2) {
                     var usercount = users;
                     io.sockets.to(roomName).emit('start_game');
+                    socket.to(roomName).emit('set_status', status);
                     io.sockets.to(roomName).emit('setSnakeSize', snakeSize);
                     io.sockets.to(roomName).emit('setFiledSize', fieldSize);
                     io.sockets.to(roomName).emit('add_players', ident);
@@ -42,8 +48,8 @@ module.exports = function (io) {
             })
 
         });
-        socket.on('success_login', () => {
-            socket.emit('snake_setting');
+        socket.on('success_login', (status) => {
+            socket.emit('snake_setting', status);
             io.sockets.emit('add_room', rooms);
         })
         socket.on('return_game', () => {
@@ -67,7 +73,6 @@ module.exports = function (io) {
                 var rand = (min, max, num) => {
                     return Math.floor(Math.floor(Math.random() * (max - min + 1) + min) / num) * num;
                 }
-                console.log(rand(fieldSize, 1, 20));
                 coordinate = {
                     x: rand(fieldSize, 1, 20),
                     y: rand(fieldSize, 1, 20)
@@ -81,7 +86,6 @@ module.exports = function (io) {
             var rand = (min, max, num) => {
                 return Math.floor(Math.floor(Math.random() * (max - min + 1) + min) / num) * num;
             }
-            console.log(rand(fieldSize, 1, 20));
             coordinate = {
                 x: rand(fieldSize, 1, 20),
                 y: rand(fieldSize, 1, 20)
@@ -96,7 +100,6 @@ module.exports = function (io) {
         });
         socket.on('create_room', (room) => {
             rooms.push(room);
-            console.log(rooms);
             io.sockets.emit('add_room', rooms);
         })
         socket.on('disconnect', function () {
@@ -104,6 +107,18 @@ module.exports = function (io) {
             socket.leave(roomName);
             console.log('user disconnected');
         });
+        socket.on('back_to_auth',()=>{
+console.log(socket.id);
+       for(var i = 0;i<ident.length;i++){
+           if(ident[i] == socket.id){
+            ident.splice(i,1);
+           }
+
+       }
+      console.log(ident);
+            io.sockets.to(roomName).emit('add_players', ident);
+            socket.emit('auth');
+        })
     });
 
 }

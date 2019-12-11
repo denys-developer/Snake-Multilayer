@@ -11,6 +11,7 @@ interface Props {
     id: Number;
 }
 @observer
+
 export default class AnotherSnake extends React.Component<Props>{
     @observable blocksComponent: JSX.Element[] | undefined;
     interval: any;
@@ -65,7 +66,6 @@ export default class AnotherSnake extends React.Component<Props>{
             if (this.id == request.id) {
                 this.startMove(request);
             }
-
         })
     }
     render() {

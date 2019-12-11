@@ -5,26 +5,28 @@ import { observer } from 'mobx-react';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
-
+interface Props{
+    status:boolean;
+}
 
 @observer
-export class RoomList extends React.Component {
+export class RoomList extends React.Component<Props>{
     rooms: String[] = [];
     myRef: any;
     @observable roomsList: JSX.Element[] | undefined;
-    constructor(props: Readonly<{}>) {
+    constructor(props:Props) {
         super(props);
         socket.on('add_room', (rooms: String[]) => {
             this.roomsList = rooms.map((item, index) => {
                 return (
-                    <div > 
-                    <List key={index}>
-                        <li onClick={() => this.connectToRoom(item)}>
-                            <ListItem button>
-                                {item}
-                            </ListItem>
-                        </li>
-                    </List>
+                    <div >
+                        <List key={index}>
+                            <li onClick={() => this.connectToRoom(item)}>
+                                <ListItem button>
+                                    {item}
+                                </ListItem>
+                            </li>
+                        </List>
                     </div>
                 )
             })
@@ -32,7 +34,7 @@ export class RoomList extends React.Component {
         })
     }
     connectToRoom = (room: String) => {
-        socket.emit('room_connection', room);
+        socket.emit('room_connection', {room:room,status:this.props.status});
     }
     componentDidMount() {
 

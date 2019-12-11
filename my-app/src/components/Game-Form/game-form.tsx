@@ -21,7 +21,7 @@ export class GameForm extends React.Component {
             <div>
                 <h1>Create room</h1>
 
-                <TextField id="standard-basic" label="room name" onChange={this.changeRoomName} />
+                <TextField  id="standard-basic" label="room name" onChange={this.changeRoomName} />
            
                 <Button variant="outlined" color="primary" onClick={this.createRoom} >
                     Create Room

@@ -11,6 +11,7 @@ import socket from '../socket';
 import { number } from 'prop-types';
 interface Props {
     id: Number;
+    status: boolean;
 }
 @observer
 export class Field extends React.Component<Props>{
@@ -18,13 +19,17 @@ export class Field extends React.Component<Props>{
     @observable anotherSnake: JSX.Element[] = [];
     users: Number[] = [];
     size: number | undefined;
+    
     constructor(props: Props) {
         super(props);
         this.game = new Game();
         socket.on('add_players', (ident: Number[]) => {
+            console.log(ident);
+            console.log(this.game.snake.snakeId);
             var newArray = ident.filter((item, index) => {
                 return this.game.snake.snakeId != item
             })
+     console.log(newArray);
             this.anotherSnake = newArray.map((item, index) => {
                 return (
                     <AnotherSnake game={this.game} id={item} />
@@ -45,7 +50,7 @@ export class Field extends React.Component<Props>{
             <div>
                 <ScoreComponent game={this.game} />
                 <svg width={width} height={height} className="field">
-                    <SnakeComponent game={this.game} />
+                    <SnakeComponent game={this.game} status={this.props.status} />
                     <BallComponent game={this.game} />
                     {this.anotherSnake}
                 </svg>
