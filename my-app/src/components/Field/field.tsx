@@ -24,12 +24,9 @@ export class Field extends React.Component<Props>{
         super(props);
         this.game = new Game();
         socket.on('add_players', (ident: Number[]) => {
-            console.log(ident);
-            console.log(this.game.snake.snakeId);
             var newArray = ident.filter((item, index) => {
                 return this.game.snake.snakeId != item
             })
-     console.log(newArray);
             this.anotherSnake = newArray.map((item, index) => {
                 return (
                     <AnotherSnake game={this.game} id={item} />

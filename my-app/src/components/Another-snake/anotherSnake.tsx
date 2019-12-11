@@ -11,13 +11,13 @@ interface Props {
     id: Number;
 }
 @observer
-
 export default class AnotherSnake extends React.Component<Props>{
     @observable blocksComponent: JSX.Element[] | undefined;
     interval: any;
+    speed: number = 200;
     id: Number;
-    step:number;
-    size:number|undefined;
+    step: number;
+    size: number | undefined;
     constructor(props: Props) {
         super(props);
         this.id = this.props.id;
@@ -29,20 +29,25 @@ export default class AnotherSnake extends React.Component<Props>{
     }
     @action startMove(request: { blocks: Block[], direction: String, id: Number }) {
         clearInterval(this.interval);
+       
         var { blocks, direction } = request;
         this.interval = setInterval(() => {
             var previos = Object.assign({}, blocks[0].coordinate);
             var before;
-            for (var i = 0; i < blocks.length; i++) {  
+            for (var i = 0; i < blocks.length; i++) {
                 if (blocks[i].type == 'head') {
-                    if (direction == 'ArrowRight')
+                    if (direction == 'ArrowRight') {
                         blocks[i].coordinate.x += this.step;
-                    if (direction == 'ArrowDown')
+                    }
+                    if (direction == 'ArrowDown') {
                         blocks[i].coordinate.y += this.step;
-                    if (direction == 'ArrowUp')
+                    }
+                    if (direction == 'ArrowUp') {
                         blocks[i].coordinate.y -= this.step;
-                    if (direction == 'ArrowLeft')
+                    }
+                    if (direction == 'ArrowLeft') {
                         blocks[i].coordinate.x -= this.step;
+                    }
                 }
                 else {
                     before = Object.assign({}, blocks[i].coordinate);
@@ -51,15 +56,14 @@ export default class AnotherSnake extends React.Component<Props>{
                     previos = Object.assign({}, before);
                     this.props.game.anotherSnake.push(blocks[i].coordinate);
                 }
-
             }
             this.blocksComponent = blocks.map((item, index) => {
                 return (
-                    <rect key={index} x={item.coordinate.x} y={item.coordinate.y} width={this.size}  height= {this.size} fill='rgb(255, 0, 0)' />
+                    <rect key={index} x={item.coordinate.x} y={item.coordinate.y} width={this.size} height={this.size} fill='rgb(255, 0, 0)' />
                 )
             })
 
-        }, 200);
+        }, this.speed);
     }
     componentDidMount() {
         socket.on('newCoordinate', (request: { blocks: Block[], direction: String, id: Number }) => {

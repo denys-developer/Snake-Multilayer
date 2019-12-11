@@ -32,7 +32,6 @@ export class Select_Size extends React.Component {
                     Select field size
              <select className="select custom-select custom-select-lg mb-3" onChange={this.selectFieldSize}>
                         <option value="200"> 200</option>
-                        <option value="400">400</option>
                         <option value="600">600</option>
                     </select>
                 </h1>

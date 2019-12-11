@@ -9,7 +9,7 @@ import { Authorazation } from './components/Authorization/authorazation';
 var PlayerId = Math.random();
 var authStatus;
 
-socket.emit('join-game', PlayerId);
+socket.emit('join-game');
 socket.on('setId', (id) => {
     socket.on('start_game', () => {
         ReactDom.render(
@@ -43,7 +43,7 @@ socket.on('snake_setting', (status) => {
         </div>
     ), document.getElementById('root'));
 })
-socket.on('auth', () => {
+socket.on('auth',()=>{
     ReactDom.render((
         <Authorazation />
     ), document.getElementById('root'));

@@ -16,22 +16,22 @@ module.exports = function (io) {
 
     io.on('connection', (socket) => {
         console.log(socket.id);
-        ident.push(socket.id);
+  
         socket.emit('auth');
         var roomName = '';
         var status;
         io.sockets.emit('add_room', rooms);
-        socket.on('join-game', (id) => {
+        socket.on('join-game', () => {
 
             socket.emit('statec-connection', 'You connected');
             socket.on('room_connection', (data) => {
+                ident.push(socket.id);
                 socket.emit('wait_other_players');
                 roomName = data.room;
                 status = data.status;
                 socket.join(roomName);
                 users++;
-       
-                socket.emit('setId',socket.id);
+                socket.emit('setId', socket.id);
                 if (io.sockets.adapter.rooms[roomName].length == 1) {
                     socket.emit('select_size')
                 }
@@ -66,7 +66,6 @@ module.exports = function (io) {
             io.sockets.emit('setSnakeSize', snakeSize);
             socket.broadcast.to(roomName).emit('newCoordinate', request);
         })
-
         socket.on('genricBall', () => {
             var color = colors[Math.floor(Math.random() * (colors.length - 0)) + 0];
             if (!conectedCount) {
@@ -104,18 +103,21 @@ module.exports = function (io) {
         })
         socket.on('disconnect', function () {
             users--;
-            socket.leave(roomName);
-            console.log('user disconnected');
-        });
-        socket.on('back_to_auth',()=>{
-console.log(socket.id);
-       for(var i = 0;i<ident.length;i++){
-           if(ident[i] == socket.id){
-            ident.splice(i,1);
-           }
+            for (var i = 0; i < ident.length; i++) {
+                if (ident[i] == socket.id) {
+                    ident.splice(i, 1);
+                }
 
-       }
-      console.log(ident);
+            }
+            socket.leave(roomName);
+        });
+        socket.on('back_to_auth', () => {
+            for (var i = 0; i < ident.length; i++) {
+                if (ident[i] == socket.id) {
+                    ident.splice(i, 1);
+                }
+
+            }
             io.sockets.to(roomName).emit('add_players', ident);
             socket.emit('auth');
         })
