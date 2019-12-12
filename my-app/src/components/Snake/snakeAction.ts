@@ -10,9 +10,7 @@ interface Date {
 export class SnakeAction {
     fieldSize: number = 200;
     snakeSize: number = 10;
-
     constructor(public game: Game) {
-
         socket.on('setFiledSize', (size: number) => {
             this.fieldSize = size;
         })
@@ -33,7 +31,7 @@ export class SnakeAction {
         }
         if (coordinate.x < 0 || coordinate.x > this.fieldSize - 10 || coordinate.y < 0 || coordinate.y > this.fieldSize - 10) {
             if (!date.status) {
-                socket.emit('back_to_auth');
+                socket.emit('message');
             }
             socket.emit('return_game');
         }

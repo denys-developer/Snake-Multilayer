@@ -2,6 +2,7 @@ import React from 'react';
 import socket from '../socket';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
+
 export class GameForm extends React.Component {
     roomName: String = '';
     constructor(props: Readonly<{}>) {
@@ -13,21 +14,22 @@ export class GameForm extends React.Component {
     createRoom() {
         socket.emit('create_room', this.roomName);
     }
-    changeRoomName(event: any) {
+    changeRoomName(event: React.ChangeEvent<HTMLInputElement>) {
         this.roomName = event.target.value;
     }
     render() {
         return (
-            <div>
-                <h1>Create room</h1>
+            <>
+                <div className="left_column">
+                    <h2>Create room</h2>
+                    <TextField color="primary" id="standard-basic" label="room name" onChange={this.changeRoomName} />
+                </div>
 
-                <TextField  id="standard-basic" label="room name" onChange={this.changeRoomName} />
-           
                 <Button variant="outlined" color="primary" onClick={this.createRoom} >
                     Create Room
                 </Button>
 
-            </div>
+            </>
         )
     }
 }

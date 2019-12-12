@@ -16,7 +16,7 @@ module.exports = function (io) {
 
     io.on('connection', (socket) => {
         console.log(socket.id);
-  
+
         socket.emit('auth');
         var roomName = '';
         var status;
@@ -58,6 +58,9 @@ module.exports = function (io) {
             socket.emit('setSnakeSize', snakeSize);
             socket.to(roomName).emit('restartScore');
             socket.broadcast.to(roomName).emit('restartEnemyScore');
+        });
+        socket.on('message', () => {
+            socket.emit('message');
         })
         socket.on('addScore', (score) => {
             socket.broadcast.to(roomName).emit('setEnemyScore', score);
@@ -91,6 +94,9 @@ module.exports = function (io) {
             }
             io.sockets.to(roomName).emit('ballNew', { coordinate: coordinate, color: color });
         })
+        socket.on('get_auth', () => {
+            socket.emit('auth');
+        });
         socket.on('set_size', (size) => {
             snakeSize = size.snake;
             fieldSize = size.field;

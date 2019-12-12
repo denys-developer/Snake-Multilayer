@@ -11,11 +11,11 @@ export class Select_Size extends React.Component {
     SaveSelect = () => {
         socket.emit('set_size', { snake: this.snake, field: this.field });
     }
-    selectSnakeSize = (event: any) => {
+    selectSnakeSize = (event: React.ChangeEvent<HTMLSelectElement>) => {
 
         this.snake = parseInt(event.target.value);
     }
-    selectFieldSize = (event: any) => {
+    selectFieldSize = (event: React.ChangeEvent<HTMLSelectElement>) => {
         this.field = parseInt(event.target.value);
     }
     render() {

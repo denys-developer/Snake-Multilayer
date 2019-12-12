@@ -1,0 +1,10 @@
+.list{
+    width: 50%;
+display: flex;
+}
+.left_column{
+    width: 50%;
+}
+.right_column{
+    width: 50%;
+}

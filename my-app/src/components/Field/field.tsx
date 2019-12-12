@@ -19,7 +19,7 @@ export class Field extends React.Component<Props>{
     @observable anotherSnake: JSX.Element[] = [];
     users: Number[] = [];
     size: number | undefined;
-    
+
     constructor(props: Props) {
         super(props);
         this.game = new Game();

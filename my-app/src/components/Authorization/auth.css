@@ -5,10 +5,10 @@ width: 30%;
 }
 .textField{
 width: 100%;
-color: white;
+
 }
 p{
-    margin: 20px;
+    margin: 30px;
 }
 .buttons{
     display: flex;

@@ -99,7 +99,6 @@ export default class SnakeComponent extends React.Component<Props, {}> {
         super(props);
         this.snake = this.props.game.snake;
         this.snake.startMove('ArrowRight');
-
     }
     componentWillMount() {
         document.addEventListener("keydown", (event) => {

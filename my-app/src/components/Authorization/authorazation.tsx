@@ -8,26 +8,45 @@ import socket from '../socket';
 import { action, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { ValidatorForm, TextValidator } from 'react-material-ui-form-validator';
+import { createMuiTheme, makeStyles, ThemeProvider } from '@material-ui/core/styles';
 
+const theme = createMuiTheme({
+    typography: {
+        fontFamily: 'Titillium Web',
+        fontSize: 20,
+        body1: {
+            fontWeight: 700,
+          }
+    },
+    palette: {
+        primary: {
+            main: "#009688",
+         
+        },
+        secondary: {
+            main: '#f44336',
+        },
+    },
+});
 const axios = require('axios').default;
 @observer
 export class Authorazation extends React.Component {
     authStatus: boolean | undefined;
-    login: string | undefined;
-    password: string | undefined;
-    nickname: string | undefined;
+    login: string = '';
+    password: string = '';
+    nickname: string = '';
     @observable errorPassword: boolean = false;
     @observable errorLogin: boolean = false;
     constructor(props: Readonly<{}>) {
         super(props);
     }
-    setLogin = (event: any) => {
+    setLogin = (event: React.ChangeEvent<HTMLInputElement>) => {
         this.login = event.target.value;
     }
-    setPassword = (event: any) => {
+    setPassword = (event: React.ChangeEvent<HTMLInputElement>) => {
         this.password = event.target.value;
     }
-    setNickName = (event: any) => {
+    setNickName = (event: React.ChangeEvent<HTMLInputElement>) => {
         this.nickname = event.target.value;
     }
     Login = () => {
@@ -56,22 +75,33 @@ export class Authorazation extends React.Component {
         socket.emit('success_login', this.authStatus);
     }
     Registration = () => {
-        axios
-            .post('http://localhost:8080/user/register',
-                {
-                    login: this.login,
-                    password: this.password,
-                    nickname: this.nickname
+        if (!this.login.length) {
+            this.errorLogin = true;
+        }
+        if (!this.password.length) {
+            this.errorPassword = true;
+        }
+        else {
+            this.errorLogin = false;
+            this.errorPassword = false;
+            axios
+                .post('http://localhost:8080/user/register',
+                    {
+                        login: this.login,
+                        password: this.password,
+                        nickname: this.nickname
+                    })
+                .then((response: any) => {
+                    alert('Register success');
                 })
-            .then((response: any) => {
-                console.log(response);
-            })
+        }
     }
     componentDidMount() {
     }
     render() {
         return (
             <div className="container">
+                  <ThemeProvider theme={theme}>
                 <p>
                     <TextField className="textField" id="standard-basic" label="Your nick in game" onChange={this.setNickName} />
                 </p>
@@ -81,12 +111,13 @@ export class Authorazation extends React.Component {
                 <p>
                     <TextField error={this.errorPassword} className="textField" id="standard-basic" label="Password" onChange={this.setPassword} />
                 </p>
+                </ThemeProvider>
                 <div className="buttons">
-                    <Button className="button" variant="outlined" color="primary" onClick={this.Registration}>
+                    <Button className="button" variant="contained" color="primary" onClick={this.Registration}>
                         Registrate
                  </Button>
-                    <Button className="button" variant="outlined" onClick={this.Login}>Login</Button>
-                    <Button className="button" variant="outlined" color="secondary" onClick={this.PlayAsGuest}>
+                    <Button className="button" variant="contained" onClick={this.Login}>Login</Button>
+                    <Button className="button" variant="contained" color="secondary" onClick={this.PlayAsGuest}>
                         Play as guest
                 </Button>
                 </div>

@@ -1,8 +1,6 @@
-// let express = require('express');
 import bodyParser = require("body-parser");
 import express = require('express');
 import cors = require('cors');
-
 let dbConnection = require('./modules/db');
 const tabel = `create table if not exists users(
     id int primary key auto_increment,
