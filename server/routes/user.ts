@@ -25,7 +25,6 @@ router.post('/login', (req: any, res: any) => {
         let login = req.body.login;
         let nickname = req.body.nickname;
         dbConnection.query(`SELECT * FROM users WHERE login = '${login}'`, function (err: any, result: any) {
-            console.log(result);
             if (result.length) {
                 bcrypt.compare(password, result[0].password, function (err: any, status: any) {
                     if (!status) {
@@ -42,7 +41,6 @@ router.post('/login', (req: any, res: any) => {
         });
     }
     catch (err) {
-        console.log(err);
         res.send(err);
     }
 })

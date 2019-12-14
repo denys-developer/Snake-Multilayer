@@ -2,7 +2,7 @@ import React from 'react';
 import socket from '../socket';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
-
+import './game-form.css';;
 export class GameForm extends React.Component {
     roomName: String = '';
     constructor(props: Readonly<{}>) {
@@ -20,15 +20,13 @@ export class GameForm extends React.Component {
     render() {
         return (
             <>
-                <div className="left_column">
-                    <h2>Create room</h2>
-                    <TextField color="primary" id="standard-basic" label="room name" onChange={this.changeRoomName} />
+                <h2>Create room</h2>
+                <TextField color="primary" id="standard-basic" label="room name" onChange={this.changeRoomName} className="text" />
+                <div className="btn">
+                    <Button variant="outlined" color="primary" onClick={this.createRoom} className="btn" >
+                        Create Room
+      </Button>
                 </div>
-
-                <Button variant="outlined" color="primary" onClick={this.createRoom} >
-                    Create Room
-                </Button>
-
             </>
         )
     }

@@ -15,8 +15,6 @@ module.exports = function (io) {
     var fieldSize = 100;
 
     io.on('connection', (socket) => {
-        console.log(socket.id);
-
         socket.emit('auth');
         var roomName = '';
         var status;
@@ -28,8 +26,16 @@ module.exports = function (io) {
                 ident.push(socket.id);
                 socket.emit('wait_other_players');
                 roomName = data.room;
+                rooms.forEach((item) => {
+                    if (item.name == data.room.name) {
+                        item.online++;
+                        io.sockets.emit('add_room', rooms);
+
+                    }
+                })
                 status = data.status;
                 socket.join(roomName);
+
                 users++;
                 socket.emit('setId', socket.id);
                 if (io.sockets.adapter.rooms[roomName].length == 1) {
@@ -39,6 +45,8 @@ module.exports = function (io) {
                     var usercount = users;
                     io.sockets.to(roomName).emit('start_game');
                     socket.to(roomName).emit('set_status', status);
+                    socket.emit('setRoomName', roomName);
+
                     io.sockets.to(roomName).emit('setSnakeSize', snakeSize);
                     io.sockets.to(roomName).emit('setFiledSize', fieldSize);
                     io.sockets.to(roomName).emit('add_players', ident);
@@ -46,7 +54,6 @@ module.exports = function (io) {
                     io.sockets.to(roomName).emit('newConnection');
                 }
             })
-
         });
         socket.on('success_login', (status) => {
             socket.emit('snake_setting', status);
@@ -59,7 +66,15 @@ module.exports = function (io) {
             socket.to(roomName).emit('restartScore');
             socket.broadcast.to(roomName).emit('restartEnemyScore');
         });
-        socket.on('message', () => {
+        socket.on('message', (name) => {
+            console.log(name.name);
+            for (var i = 0; i < rooms.length; i++) {
+ 
+                if (rooms[i].name == name.name) {
+                    rooms[i].online--;
+
+                }
+            }
             socket.emit('message');
         })
         socket.on('addScore', (score) => {
@@ -104,7 +119,7 @@ module.exports = function (io) {
             io.sockets.to(roomName).emit('wait_other_players');
         });
         socket.on('create_room', (room) => {
-            rooms.push(room);
+            rooms.push({ name: room, online: 0 });
             io.sockets.emit('add_room', rooms);
         })
         socket.on('disconnect', function () {
@@ -113,7 +128,6 @@ module.exports = function (io) {
                 if (ident[i] == socket.id) {
                     ident.splice(i, 1);
                 }
-
             }
             socket.leave(roomName);
         });
@@ -122,7 +136,6 @@ module.exports = function (io) {
                 if (ident[i] == socket.id) {
                     ident.splice(i, 1);
                 }
-
             }
             io.sockets.to(roomName).emit('add_players', ident);
             socket.emit('auth');

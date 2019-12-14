@@ -15,14 +15,15 @@ const theme = createMuiTheme({
         fontFamily: 'Titillium Web',
         fontSize: 20,
         body1: {
-            fontWeight: 700,
-          }
+            fontWeight: 500,
+          },
     },
     palette: {
         primary: {
             main: "#009688",
          
         },
+        
         secondary: {
             main: '#f44336',
         },
@@ -121,6 +122,7 @@ export class Authorazation extends React.Component {
                         Play as guest
                 </Button>
                 </div>
+
             </div>
         )
     }

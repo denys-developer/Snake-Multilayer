@@ -3,5 +3,14 @@
     padding: 0;
 }
 .select{
-    width: 20%;
+    width: 50%;
+}
+.container{
+display: flex;
+}
+.param{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 }

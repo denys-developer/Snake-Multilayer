@@ -10,12 +10,16 @@ interface Date {
 export class SnakeAction {
     fieldSize: number = 200;
     snakeSize: number = 10;
+    roomName: string = '';
     constructor(public game: Game) {
         socket.on('setFiledSize', (size: number) => {
             this.fieldSize = size;
         })
         socket.on('setSnakeSize', (size: number) => {
             this.snakeSize = size;
+        })
+        socket.on('setRoomName', (name: string) => {
+            this.roomName = name;
         })
     }
 
@@ -24,17 +28,15 @@ export class SnakeAction {
         var color = this.game.ball.color;
         var coordinate = date.coordinate;
         if ((coordinate.x >= ballCoordinate.x && coordinate.x <= (ballCoordinate.x + this.snakeSize)) && (coordinate.y >= ballCoordinate.y && coordinate.y <= (ballCoordinate.y + this.snakeSize))) {
-
             this.game.ball.changeBallCoordinate();
             this.game.score.addScore();
             this.game.snake.addBlocks(color);
         }
         if (coordinate.x < 0 || coordinate.x > this.fieldSize - 10 || coordinate.y < 0 || coordinate.y > this.fieldSize - 10) {
             if (!date.status) {
-                socket.emit('message');
+                socket.emit('message',this.roomName);
             }
             socket.emit('return_game');
         }
-
     }
 }

@@ -22,7 +22,6 @@ export class Snake {
 
 
         socket.on('setSnakeSize', (size: number) => {
-            console.log(size);
             this.step = size;
         })
         this.blocks.push(new Block('head', { x: 20, y: 0 }, this.color_green), new Block('body', { x: 0, y: 0 }, this.color_green));

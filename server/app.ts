@@ -9,15 +9,15 @@ const tabel = `create table if not exists users(
     nickname varchar(255) not null
   )`;
 dbConnection.query(tabel, function (err: any, results: any) {
-    if (err) console.log(err);
-    else console.log("Таблица создана");
+    // if (err) console.log(err);
+    // else console.log("Таблица создана");
 });
 dbConnection.connect(function (err: any) {
     if (err) {
         return console.error("Помилка: " + err.message);
     }
     else {
-        console.log("Підключення до MySQL успішно встановлено");
+        // console.log("Підключення до MySQL успішно встановлено");
     }
 });
 const app: express.Application = express();

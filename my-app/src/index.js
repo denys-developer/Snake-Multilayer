@@ -52,6 +52,7 @@ socket.on('snake_setting', (status) => {
 })
 socket.on('auth', () => {
     ReactDom.render((
+        
         <Authorazation />
     ), document.getElementById('root'));
 })
