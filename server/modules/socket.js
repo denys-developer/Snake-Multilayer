@@ -39,16 +39,18 @@ module.exports = function (io) {
                 users++;
                 socket.emit('setId', socket.id);
                 if (io.sockets.adapter.rooms[roomName].length == 1) {
-                    socket.emit('select_size')
+                    socket.emit('select_size', roomName)
                 }
                 if (io.sockets.adapter.rooms[roomName].length >= 2) {
                     var usercount = users;
                     io.sockets.to(roomName).emit('start_game');
+                    socket.emit('setRoomName', roomName);
                     socket.to(roomName).emit('set_status', status);
                     socket.emit('setRoomName', roomName);
 
                     io.sockets.to(roomName).emit('setSnakeSize', snakeSize);
                     io.sockets.to(roomName).emit('setFiledSize', fieldSize);
+
                     io.sockets.to(roomName).emit('add_players', ident);
                     io.sockets.to(roomName).emit('setBallSize', snakeSize);
                     io.sockets.to(roomName).emit('newConnection');
@@ -67,9 +69,8 @@ module.exports = function (io) {
             socket.broadcast.to(roomName).emit('restartEnemyScore');
         });
         socket.on('message', (name) => {
-            console.log(name.name);
             for (var i = 0; i < rooms.length; i++) {
- 
+
                 if (rooms[i].name == name.name) {
                     rooms[i].online--;
 

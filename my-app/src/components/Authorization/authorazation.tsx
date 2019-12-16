@@ -9,21 +9,18 @@ import { action, observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { ValidatorForm, TextValidator } from 'react-material-ui-form-validator';
 import { createMuiTheme, makeStyles, ThemeProvider } from '@material-ui/core/styles';
-
 const theme = createMuiTheme({
     typography: {
         fontFamily: 'Titillium Web',
         fontSize: 20,
         body1: {
             fontWeight: 500,
-          },
+        },
     },
     palette: {
         primary: {
             main: "#009688",
-         
         },
-        
         secondary: {
             main: '#f44336',
         },
@@ -102,16 +99,16 @@ export class Authorazation extends React.Component {
     render() {
         return (
             <div className="container">
-                  <ThemeProvider theme={theme}>
-                <p>
-                    <TextField className="textField" id="standard-basic" label="Your nick in game" onChange={this.setNickName} />
-                </p>
-                <p>
-                    <TextField type="email" error={this.errorLogin} className="textField" id="standard-basic" label="Login" onChange={this.setLogin} />
-                </p>
-                <p>
-                    <TextField error={this.errorPassword} className="textField" id="standard-basic" label="Password" onChange={this.setPassword} />
-                </p>
+                <ThemeProvider theme={theme}>
+                    <p>
+                        <TextField className="textField" id="standard-basic" label="Your nick in game" onChange={this.setNickName} />
+                    </p>
+                    <p>
+                        <TextField type="email" error={this.errorLogin} className="textField" id="standard-basic" label="Login" onChange={this.setLogin} />
+                    </p>
+                    <p>
+                        <TextField error={this.errorPassword} className="textField" id="standard-basic" label="Password" onChange={this.setPassword} />
+                    </p>
                 </ThemeProvider>
                 <div className="buttons">
                     <Button className="button" variant="contained" color="primary" onClick={this.Registration}>
@@ -122,6 +119,8 @@ export class Authorazation extends React.Component {
                         Play as guest
                 </Button>
                 </div>
+
+
 
             </div>
         )

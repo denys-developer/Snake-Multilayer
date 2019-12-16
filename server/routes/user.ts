@@ -1,10 +1,10 @@
-let router = require('express').Router();
+let userRout = require('express').Router();
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
 let dbConnection = require('../modules/db');
 var hash: any;
 var jwt = require('jsonwebtoken');
-router.post('/register', (req: any, res: any) => {
+userRout.post('/register', (req: any, res: any) => {
     let password = req.body.password;
     let login = req.body.login;
     let nickname = req.body.nickname;
@@ -19,7 +19,7 @@ router.post('/register', (req: any, res: any) => {
     })
     res.send(req.body);
 })
-router.post('/login', (req: any, res: any) => {
+userRout.post('/login', (req: any, res: any) => {
     try {
         let password = req.body.password;
         let login = req.body.login;
@@ -44,4 +44,11 @@ router.post('/login', (req: any, res: any) => {
         res.send(err);
     }
 })
-module.exports = router;
+userRout.post('/getUsers', (req: any, res: any) => {
+    const sql = `SELECT * FROM users`;
+    dbConnection.query(sql, function (err: any, results: any) {
+        if (err) console.log(err);
+        res.send(results);
+    });
+})
+module.exports = userRout;

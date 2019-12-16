@@ -35,7 +35,7 @@ export class Snake {
         this.blocks = [];
         this.blocks.push(new Block('head', { x: 20, y: 0 }, this.color_green), new Block('body', { x: 0, y: 0 }, this.color_green));
         this.game.score.RestartYourScore();
-        
+
     }
     @action addBlocks(color: string) {
         var lastblock = this.blocks[this.blocks.length - 1].coordinate;
@@ -46,7 +46,7 @@ export class Snake {
         this.snakeId = id;
     }
     startMove(key: String) {
-   
+
         socket.emit('snakeMove', { blocks: this.blocks, direction: key, id: this.snakeId });
         this.moveDirection = key;
         if (this.moveDirection == 'ArrowUp' && key == 'ArrowDown')
@@ -58,13 +58,13 @@ export class Snake {
         if (this.moveDirection == 'ArrowLeft' && key == 'ArrowRight')
             return;
         clearInterval(this.interval);
-  
+
         this.interval = setInterval(() => {
             var previos = Object.assign({}, this.blocks[0].coordinate);
             var before;
             for (var i = 0; i < this.blocks.length; i++) {
                 if (this.blocks[i].type == 'head') {
-                    if (key == 'ArrowRight'){
+                    if (key == 'ArrowRight') {
                         this.blocks[i].coordinate.x += this.step;
                     }
                     if (key == 'ArrowDown')

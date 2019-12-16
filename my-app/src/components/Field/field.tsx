@@ -13,16 +13,19 @@ interface Props {
     id: Number;
     status: boolean;
 }
+const axios = require('axios').default;
+
 @observer
 export class Field extends React.Component<Props>{
     game: Game;
     @observable anotherSnake: JSX.Element[] = [];
     users: Number[] = [];
     size: number | undefined;
-
+    roomName: string = '';
     constructor(props: Props) {
         super(props);
         this.game = new Game();
+
         socket.on('add_players', (ident: Number[]) => {
             var newArray = ident.filter((item, index) => {
                 return this.game.snake.snakeId != item
@@ -33,9 +36,13 @@ export class Field extends React.Component<Props>{
                 )
             })
         })
+        socket.on('setRoomName', (name: string) => {
+            this.roomName = name;
+        })
         socket.on('setFiledSize', (size: number) => {
             this.size = size;
         })
+
     }
     componentWillMount() {
         this.game.snake.setSnakeId(this.props.id);

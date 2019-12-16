@@ -5,8 +5,10 @@
 .select{
     width: 50%;
 }
-.container{
+.cont{
 display: flex;
+flex-direction: column;
+width: 40%;
 }
 .param{
     display: flex;

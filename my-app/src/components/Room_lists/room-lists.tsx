@@ -5,9 +5,6 @@ import { observer } from 'mobx-react';
 import { MDCList } from '@material/list';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemText from '@material-ui/core/ListItemText';
-import Card from '@material-ui/core/Card';
 import ListSubheader from '@material-ui/core/ListSubheader';
 import { GiSandSnake } from "react-icons/gi";
 import { GiSnake } from "react-icons/gi";
@@ -15,6 +12,7 @@ import { GiSnakeTongue } from "react-icons/gi";
 import { GiSnakeSpiral } from "react-icons/gi";
 import { GiSnakeBite } from "react-icons/gi";
 import { GiRattlesnake } from "react-icons/gi";
+
 
 import './room-list.css';
 interface Props {
@@ -24,6 +22,7 @@ interface Props {
 export class RoomList extends React.Component<Props>{
     rooms: String[] = [];
     myRef: any;
+    axios: any;
     @observable roomsList: JSX.Element[] | undefined;
     snakeIcons: JSX.Element[] = [
         <GiSandSnake className="icon" />,
@@ -35,8 +34,10 @@ export class RoomList extends React.Component<Props>{
     ];
     constructor(props: Props) {
         super(props);
+        this.axios = require('axios').default;
+
         socket.on('add_room', (rooms: any[]) => {
-            this.createRoomList(rooms);
+            this.getAllRooms();
         })
     }
     @action createRoomList(rooms: any[]) {
@@ -63,8 +64,19 @@ export class RoomList extends React.Component<Props>{
     connectToRoom = (room: String) => {
         socket.emit('room_connection', { room: room, status: this.props.status });
     }
-    componentDidMount() {
+    getAllRooms = () => {
+        this.axios.get('http://localhost:8080/room/getRooms')
+            .then((res: any) => {
+                this.rooms = res.date;
+                console.log(res);
+                if (res.data)
+                    this.createRoomList(res.data);
+            });
     }
+    componentWillMount() {
+        this.getAllRooms();
+    }
+
     render() {
         return (
             <List

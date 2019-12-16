@@ -23,10 +23,10 @@ socket.on('setId', (id) => {
             ), document.getElementById('root'));
     })
 })
-socket.on('select_size', () => {
+socket.on('select_size', (res) => {
     ReactDom.render(
         (
-            <Select_Size />
+            <Select_Size roomName={res.name}/>
         ), document.getElementById('root'));
 });
 socket.on('snake_setting', (status) => {
