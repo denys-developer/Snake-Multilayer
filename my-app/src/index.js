@@ -10,6 +10,7 @@ import { RoomList } from './components/Room_lists/room-lists';
 import { Authorazation } from './components/Authorization/authorazation';
 import Button from '@material-ui/core/Button';
 import './snake.css';
+//d
 var PlayerId = Math.random();
 var authStatus;
 socket.emit('join-game');
