@@ -2,6 +2,7 @@ import React from 'react';
 import './select_size.css';
 import { number } from 'prop-types';
 import socket from '../socket';
+import {sockets} from '../../index';
 const axios = require('axios').default;
 
 interface Props {
@@ -20,7 +21,7 @@ export class Select_Size extends React.Component<Props>{
             snakeSize: this.snake
         })
             .then((res: any) => {
-                socket.emit('set_size', { snake: this.snake, field: this.field,name:this.props.roomName });
+                sockets.setSize( { snake: this.snake, field: this.field, name: this.props.roomName });
             });
     }
     selectSnakeSize = (event: React.ChangeEvent<HTMLSelectElement>) => {

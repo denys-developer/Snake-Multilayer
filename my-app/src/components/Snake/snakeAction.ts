@@ -3,6 +3,7 @@ import { Game } from "../game";
 import socket from "../socket";
 import { number } from "prop-types";
 import { kMaxLength } from "buffer";
+import {sockets} from '../../index';
 interface Date {
     coordinate: { x: number, y: number },
     status: boolean
@@ -34,7 +35,7 @@ export class SnakeAction {
         }
         if (coordinate.x < 0 || coordinate.x > this.fieldSize - 10 || coordinate.y < 0 || coordinate.y > this.fieldSize - 10) {
             if (!date.status) {
-                socket.emit('message',this.roomName);
+                sockets.sendMessaage(this.roomName);
             }
             socket.emit('return_game');
         }

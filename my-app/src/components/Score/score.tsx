@@ -1,5 +1,6 @@
 import React from 'react';
 import { observable, action } from 'mobx';
+import {sockets} from '../../index';
 import { observer } from 'mobx-react';
 import { Game } from '../game';
 import socket from '../socket';
@@ -19,7 +20,8 @@ export class Score {
     }
     @action addScore() {
         this.yourScore++;
-        socket.emit('addScore', this.yourScore);
+
+        sockets.addScore(this.yourScore);
     }
     @action RestartYourScore() {
         this.yourScore = 0;

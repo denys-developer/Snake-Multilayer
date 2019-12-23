@@ -37,7 +37,9 @@ module.exports = function (io) {
                 socket.join(roomName);
 
                 users++;
+                console.log('erferf');
                 socket.emit('setId', socket.id);
+
                 if (io.sockets.adapter.rooms[roomName].length == 1) {
                     socket.emit('select_size', roomName)
                 }

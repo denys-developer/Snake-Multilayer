@@ -5,9 +5,10 @@ let DbConnection = require('../modules/db');
 
 roomRout.post('/saveRoom', (req: any, res: any) => {
     var name = req.body.name;
+
     let sql = `INSERT INTO rooms(name) VALUES('${name}')`;
     DbConnection.query(sql, function (err: any, results: any) {
-        if (err) console.log(err);
+                if (err) console.log(err);
     });
     res.send(req.body);
 });
